@@ -31,9 +31,13 @@ class Client(threading.Thread):
         
         self.connection.send(struct.pack("="+types, *buff.BufferWrite))
         
-    def sendmessage_all(self):
+    def sendmessage_all(self, sendself=True):
         for c in self.server.clients:
-            c.sendmessage(self.buffer)
+            if not sendself:
+                if not c.pid==self.pid:
+                    c.sendmessage(self.buffer)
+            else:
+                c.sendmessage(self.buffer)
             
     def run(self):
         while self.connected:
@@ -87,7 +91,7 @@ class Client(threading.Thread):
         self.clearbuffer()
         self.writebyte(send_codes["join"])
         self.writestring(self.name)
-        self.sendmessage_all()
+        self.sendmessage_all(sendself=False)
         
     def case_message_ping(self):
         self.clearbuffer()
