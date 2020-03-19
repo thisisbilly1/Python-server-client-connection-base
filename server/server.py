@@ -10,13 +10,12 @@ from NetworkConstants import receive_codes, send_codes
 
 
 class Server:
-    def __init__(self, max_clients, ip, port):
+    def __init__(self, max_clients, port):
         
         self.max_clients = max_clients
         self.clients = []
         self.clientpid = 1 #0=server
         self.port = port
-        self.ip = ip
         self.socket = None
         self.running = False
         
@@ -49,7 +48,7 @@ class Server:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         try:
-            self.socket.bind((self.ip,self.port))
+            self.socket.bind(("",self.port))
             self.running = True
         except:
             print("Failed to bind socket- check to make sure server is not already running")
@@ -73,5 +72,5 @@ class Server:
             self.clientpid+=1
                 
                 
-s = Server(32, "127.0.0.1", 1337)
+s = Server(32, 1337)
 s.start()
